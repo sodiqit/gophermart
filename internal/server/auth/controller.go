@@ -4,13 +4,21 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/sodiqit/gophermart/internal/logger"
 )
 
 type AuthController struct {
+	logger       logger.Logger
+	authService  AuthService
+	tokenService TokenService
 }
 
 func (c *AuthController) Route() *chi.Mux {
 	r := chi.NewRouter()
+
+	r.Use(middleware.AllowContentType("application/json"))
+	r.Use(JWTAuth(c.tokenService))
 
 	r.Post("/register", c.handleRegister)
 
@@ -18,16 +26,13 @@ func (c *AuthController) Route() *chi.Mux {
 }
 
 func (c *AuthController) handleRegister(w http.ResponseWriter, r *http.Request) {
-	contentType := r.Header.Get("Content-Type")
-
-	if contentType != "application/json" {
-		http.Error(w, "need provide Content-Type: application/json", http.StatusBadRequest)
-		return
-	}
-
-	w.Write([]byte(""))
+	panic("implement me")
 }
 
-func NewController() *AuthController {
-	return &AuthController{}
+func NewController(logger logger.Logger, authService AuthService, tokenService TokenService) *AuthController {
+	return &AuthController{
+		logger,
+		authService,
+		tokenService,
+	}
 }
