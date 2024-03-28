@@ -1,13 +1,17 @@
 package http
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/sodiqit/gophermart/internal/logger"
 	"github.com/sodiqit/gophermart/internal/server/auth"
 	"github.com/sodiqit/gophermart/internal/server/config"
+	"github.com/sodiqit/gophermart/internal/server/repository"
 )
 
 func RunServer(config *config.Config) error {
@@ -15,7 +19,16 @@ func RunServer(config *config.Config) error {
 
 	defer logger.Sync()
 
-	authContainer := auth.NewContainer(config, logger)
+	pool, err := pgxpool.New(context.Background(), config.DatabaseDSN)
+	if err != nil {
+		return err
+	}
+
+	db := stdlib.OpenDBFromPool(pool)
+
+	userRepo := repository.NewDBUserRepository(db)
+
+	authContainer := auth.NewContainer(config, logger, userRepo)
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)

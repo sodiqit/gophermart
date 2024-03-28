@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -18,7 +19,6 @@ func (c *AuthController) Route() *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Use(middleware.AllowContentType("application/json"))
-	r.Use(JWTAuth(c.tokenService))
 
 	r.Post("/register", c.handleRegister)
 
@@ -26,7 +26,17 @@ func (c *AuthController) Route() *chi.Mux {
 }
 
 func (c *AuthController) handleRegister(w http.ResponseWriter, r *http.Request) {
-	panic("implement me")
+	op := "authController.handleRegister"
+
+	token, err := c.authService.Register(r.Context(), "test", "test")
+
+	if err != nil {
+		c.logger.Errorw("op", op, "err", err.Error())
+		http.Error(w, "", http.StatusInternalServerError) //TODO: map errors from service to http status codes
+		return
+	}
+
+	w.Header().Add("Authorization", fmt.Sprintf("Bearer %s", token))
 }
 
 func NewController(logger logger.Logger, authService AuthService, tokenService TokenService) *AuthController {
