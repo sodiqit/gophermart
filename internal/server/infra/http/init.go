@@ -26,6 +26,12 @@ func RunServer(config *config.Config) error {
 
 	db := stdlib.OpenDBFromPool(pool)
 
+	err = db.Ping()
+
+	if err != nil {
+		return err
+	}
+
 	userRepo := repository.NewDBUserRepository(db)
 
 	authContainer := auth.NewContainer(config, logger, userRepo)
