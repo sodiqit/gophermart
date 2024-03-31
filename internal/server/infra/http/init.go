@@ -42,7 +42,7 @@ func RunServer(config *config.Config) error {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Mount("/", authContainer.Controller.Route())
+	r.Mount("/api/", authContainer.Controller.Route())
 
 	logger.Infow("start server", "address", config.Address, "config", config)
 	return http.ListenAndServe(config.Address, r)
