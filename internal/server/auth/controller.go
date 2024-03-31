@@ -36,8 +36,6 @@ func (c *AuthController) handleRegister(w http.ResponseWriter, r *http.Request) 
 
 	err := utils.ValidateJSONBody(r.Context(), r.Body, &dto)
 
-	fmt.Println("Error while validate dto in register", err)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -61,8 +59,6 @@ func (c *AuthController) handleLogin(w http.ResponseWriter, r *http.Request) {
 	var dto LoginRequestDTO
 
 	err := utils.ValidateJSONBody(r.Context(), r.Body, &dto)
-
-	fmt.Println("Error while validate dto in login", err)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
