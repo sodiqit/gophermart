@@ -21,8 +21,8 @@ func (c *AuthController) Route() *chi.Mux {
 
 	r.Use(middleware.AllowContentType("application/json"))
 
-	r.Post("/user/register/", c.handleRegister)
-	r.Post("/user/login/", c.handleLogin)
+	r.Post("/user/register", c.handleRegister)
+	r.Post("/user/login", c.handleLogin)
 
 	return r
 }
