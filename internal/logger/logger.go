@@ -15,17 +15,17 @@ type Logger interface {
 	DPanicw(msg string, keysAndValues ...interface{})
 	Panicw(msg string, keysAndValues ...interface{})
 	Fatalw(msg string, keysAndValues ...interface{})
-	With(args...interface{}) Logger
+	With(args ...interface{}) Logger
 
 	Sync() error
 }
 
 type zapLoggerWrapper struct {
-    *zap.SugaredLogger
+	*zap.SugaredLogger
 }
 
 func (z *zapLoggerWrapper) With(args ...interface{}) Logger {
-    return &zapLoggerWrapper{z.SugaredLogger.With(args...)}
+	return &zapLoggerWrapper{z.SugaredLogger.With(args...)}
 }
 
 func New(level string) Logger {

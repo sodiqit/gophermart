@@ -38,7 +38,7 @@ func JWTAuth(tokenService TokenService) func(next http.Handler) http.Handler {
 				return
 			}
 
-			ctx := context.WithValue(r.Context(), CLAIMS_CONTEXT_KEY, claims.TokenUser)
+			ctx := context.WithValue(r.Context(), CLAIMS_CONTEXT_KEY, claims)
 
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})

@@ -15,7 +15,7 @@ type AuthContainer struct {
 func NewContainer(config *config.Config, logger logger.Logger, userRepo repository.UserRepository) *AuthContainer {
 	tokenService := NewJWTTokenService(config.JWTSecretKey)
 	authService := NewSimpleAuthService(tokenService, userRepo)
-	authController := NewController(logger, authService, tokenService)
+	authController := NewController(logger, authService)
 
 	return &AuthContainer{
 		TokenService:      tokenService,

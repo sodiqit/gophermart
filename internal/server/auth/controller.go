@@ -12,9 +12,8 @@ import (
 )
 
 type AuthController struct {
-	logger       logger.Logger
-	authService  AuthService
-	tokenService TokenService
+	logger      logger.Logger
+	authService AuthService
 }
 
 func (c *AuthController) Route() *chi.Mux {
@@ -22,8 +21,8 @@ func (c *AuthController) Route() *chi.Mux {
 
 	r.Use(middleware.AllowContentType("application/json"))
 
-	r.Post("/register", c.handleRegister)
-	r.Post("/login", c.handleLogin)
+	r.Post("/register/", c.handleRegister)
+	r.Post("/login/", c.handleLogin)
 
 	return r
 }
@@ -76,11 +75,10 @@ func (c *AuthController) handleLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Authorization", fmt.Sprintf("Bearer %s", token))
 }
 
-func NewController(logger logger.Logger, authService AuthService, tokenService TokenService) *AuthController {
+func NewController(logger logger.Logger, authService AuthService) *AuthController {
 	return &AuthController{
 		logger,
 		authService,
-		tokenService,
 	}
 }
 
