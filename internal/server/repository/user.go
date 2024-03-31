@@ -15,7 +15,7 @@ import (
 
 type UserRepository interface {
 	Create(ctx context.Context, user dtos.User) (int, error)
-	FindOne(ctx context.Context, id int) (dtos.User, error)
+	FindByLogin(ctx context.Context, username string) (dtos.User, error)
 	Exist(ctx context.Context, login string) (bool, error)
 }
 
@@ -39,10 +39,10 @@ func (r *DBUserRepository) Create(ctx context.Context, user dtos.User) (int, err
 	return int(dest.ID), err
 }
 
-func (r *DBUserRepository) FindOne(ctx context.Context, id int) (dtos.User, error) {
+func (r *DBUserRepository) FindByLogin(ctx context.Context, username string) (dtos.User, error) {
 	op := "userRepo.findOne"
 
-	stmt := table.Users.SELECT(table.Users.ID, table.Users.Login, table.Users.PasswordHash, table.Users.CreatedAt).WHERE(table.Users.ID.EQ(postgres.Int(int64(id))))
+	stmt := table.Users.SELECT(table.Users.ID, table.Users.Login, table.Users.PasswordHash, table.Users.CreatedAt).WHERE(table.Users.Login.EQ(postgres.String(username)))
 
 	var dest model.Users
 
