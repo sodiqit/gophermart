@@ -45,7 +45,7 @@ func TestAuthController_handleRegister(t *testing.T) {
 		{
 			name:           "invalid Content-type",
 			method:         http.MethodPost,
-			url:            "/register/",
+			url:            "/register",
 			body:           "test",
 			expectedStatus: http.StatusUnsupportedMediaType,
 			setupMock:      func() {},
@@ -53,8 +53,8 @@ func TestAuthController_handleRegister(t *testing.T) {
 		{
 			name:           "should success dto validate",
 			method:         http.MethodPost,
-			url:            "/register/",
-			body:           `{"username": "test"}`,
+			url:            "/register",
+			body:           `{"login": "test"}`,
 			contentType:    "application/json",
 			expectedStatus: http.StatusBadRequest,
 			setupMock:      func() {},
@@ -62,8 +62,8 @@ func TestAuthController_handleRegister(t *testing.T) {
 		{
 			name:           "should success register new user",
 			method:         http.MethodPost,
-			url:            "/register/",
-			body:           `{"username": "test", "password": "test"}`,
+			url:            "/register",
+			body:           `{"login": "test", "password": "test"}`,
 			contentType:    "application/json",
 			expectedStatus: http.StatusOK,
 			setupMock: func() {
@@ -73,8 +73,8 @@ func TestAuthController_handleRegister(t *testing.T) {
 		{
 			name:           "should handle user already exist error",
 			method:         http.MethodPost,
-			url:            "/register/",
-			body:           `{"username": "test", "password": "test"}`,
+			url:            "/register",
+			body:           `{"login": "test", "password": "test"}`,
 			contentType:    "application/json",
 			expectedStatus: http.StatusConflict,
 			setupMock: func() {
@@ -84,8 +84,8 @@ func TestAuthController_handleRegister(t *testing.T) {
 		{
 			name:           "should handle other auth service errors",
 			method:         http.MethodPost,
-			url:            "/register/",
-			body:           `{"username": "test", "password": "test"}`,
+			url:            "/register",
+			body:           `{"login": "test", "password": "test"}`,
 			contentType:    "application/json",
 			expectedStatus: http.StatusInternalServerError,
 			setupMock: func() {
@@ -147,7 +147,7 @@ func TestAuthController_handleLogin(t *testing.T) {
 		{
 			name:           "invalid Content-type",
 			method:         http.MethodPost,
-			url:            "/login/",
+			url:            "/login",
 			body:           "test",
 			expectedStatus: http.StatusUnsupportedMediaType,
 			setupMock:      func() {},
@@ -155,7 +155,7 @@ func TestAuthController_handleLogin(t *testing.T) {
 		{
 			name:           "should success dto validate",
 			method:         http.MethodPost,
-			url:            "/login/",
+			url:            "/login",
 			body:           `{"username": "test"}`,
 			contentType:    "application/json",
 			expectedStatus: http.StatusBadRequest,
@@ -164,8 +164,8 @@ func TestAuthController_handleLogin(t *testing.T) {
 		{
 			name:           "should success generate token for user",
 			method:         http.MethodPost,
-			url:            "/login/",
-			body:           `{"username": "test", "password": "test"}`,
+			url:            "/login",
+			body:           `{"login": "test", "password": "test"}`,
 			contentType:    "application/json",
 			expectedStatus: http.StatusOK,
 			setupMock: func() {
@@ -175,8 +175,8 @@ func TestAuthController_handleLogin(t *testing.T) {
 		{
 			name:           "should handle error if user not exist",
 			method:         http.MethodPost,
-			url:            "/login/",
-			body:           `{"username": "test", "password": "test"}`,
+			url:            "/login",
+			body:           `{"login": "test", "password": "test"}`,
 			contentType:    "application/json",
 			expectedStatus: http.StatusUnauthorized,
 			setupMock: func() {
@@ -186,8 +186,8 @@ func TestAuthController_handleLogin(t *testing.T) {
 		{
 			name:           "should handle error if user pass not correct",
 			method:         http.MethodPost,
-			url:            "/login/",
-			body:           `{"username": "test", "password": "test"}`,
+			url:            "/login",
+			body:           `{"login": "test", "password": "test"}`,
 			contentType:    "application/json",
 			expectedStatus: http.StatusUnauthorized,
 			setupMock: func() {
@@ -197,8 +197,8 @@ func TestAuthController_handleLogin(t *testing.T) {
 		{
 			name:           "should handle other auth service errors",
 			method:         http.MethodPost,
-			url:            "/login/",
-			body:           `{"username": "test", "password": "test"}`,
+			url:            "/login",
+			body:           `{"login": "test", "password": "test"}`,
 			contentType:    "application/json",
 			expectedStatus: http.StatusInternalServerError,
 			setupMock: func() {
