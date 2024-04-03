@@ -49,6 +49,7 @@ func (c *AuthController) handleRegister(w http.ResponseWriter, r *http.Request) 
 	}
 
 	w.Header().Add("Authorization", fmt.Sprintf("Bearer %s", token))
+	w.WriteHeader(200)
 }
 
 func (c *AuthController) handleLogin(w http.ResponseWriter, r *http.Request) {
@@ -73,6 +74,7 @@ func (c *AuthController) handleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Authorization", fmt.Sprintf("Bearer %s", token))
+	w.WriteHeader(200)
 }
 
 func NewController(logger logger.Logger, authService AuthService) *AuthController {
