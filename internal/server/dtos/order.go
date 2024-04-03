@@ -7,6 +7,6 @@ type Order struct {
 	UserID    int       `json:"-"`
 	Accrual   *float64  `json:"accrual,omitempty"`
 	Status    string    `json:"status"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"uploaded_at"`
 	UpdatedAt time.Time `json:"-"`
 }

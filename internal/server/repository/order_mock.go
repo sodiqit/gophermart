@@ -69,3 +69,18 @@ func (mr *MockOrderRepositoryMockRecorder) FindByOrderNumber(ctx, orderNumber an
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByOrderNumber", reflect.TypeOf((*MockOrderRepository)(nil).FindByOrderNumber), ctx, orderNumber)
 }
+
+// GetListByUser mocks base method.
+func (m *MockOrderRepository) GetListByUser(ctx context.Context, userID int) ([]dtos.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetListByUser", ctx, userID)
+	ret0, _ := ret[0].([]dtos.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetListByUser indicates an expected call of GetListByUser.
+func (mr *MockOrderRepositoryMockRecorder) GetListByUser(ctx, userID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListByUser", reflect.TypeOf((*MockOrderRepository)(nil).GetListByUser), ctx, userID)
+}

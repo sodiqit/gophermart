@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	dtos "github.com/sodiqit/gophermart/internal/server/dtos"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -37,6 +38,21 @@ func NewMockOrderService(ctrl *gomock.Controller) *MockOrderService {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOrderService) EXPECT() *MockOrderServiceMockRecorder {
 	return m.recorder
+}
+
+// GetUserOrders mocks base method.
+func (m *MockOrderService) GetUserOrders(ctx context.Context, userID int) ([]dtos.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserOrders", ctx, userID)
+	ret0, _ := ret[0].([]dtos.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserOrders indicates an expected call of GetUserOrders.
+func (mr *MockOrderServiceMockRecorder) GetUserOrders(ctx, userID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserOrders", reflect.TypeOf((*MockOrderService)(nil).GetUserOrders), ctx, userID)
 }
 
 // Upload mocks base method.

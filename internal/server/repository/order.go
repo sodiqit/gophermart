@@ -25,6 +25,7 @@ const (
 type OrderRepository interface {
 	Create(ctx context.Context, userID int, orderNumber string, status string) (string, error)
 	FindByOrderNumber(ctx context.Context, orderNumber string) (dtos.Order, error)
+	GetListByUser(ctx context.Context, userID int) ([]dtos.Order, error)
 }
 
 type DBOrderRepository struct {
@@ -67,6 +68,28 @@ func (r *DBOrderRepository) FindByOrderNumber(ctx context.Context, orderNumber s
 	}
 
 	return mapOrderEntityToDto(dest), nil
+}
+
+func (r *DBOrderRepository) GetListByUser(ctx context.Context, userID int) ([]dtos.Order, error) {
+	op := "orderRepo.getListByUser"
+
+	stmt := table.Orders.SELECT(table.Orders.ID, table.Orders.UserID, table.Orders.Accrual, table.Orders.Status, table.Orders.CreatedAt, table.Orders.UpdatedAt).WHERE(table.Orders.UserID.EQ(postgres.Int(int64(userID))))
+
+	var dest []model.Orders
+
+	err := stmt.QueryContext(ctx, r.db, &dest)
+
+	if err != nil {
+		return make([]dtos.Order, 0), fmt.Errorf("%s: %w", op, err)
+	}
+
+	result := make([]dtos.Order, len(dest))
+
+	for i, entity := range dest {
+		result[i] = mapOrderEntityToDto(entity)
+	}
+
+	return result, nil
 }
 
 func mapOrderEntityToDto(entity model.Orders) dtos.Order {
