@@ -60,7 +60,6 @@ func (s *SimpleAuthService) Login(ctx context.Context, username string, password
 
 	if errors.Is(err, qrm.ErrNoRows) {
 		return "", fmt.Errorf("%s: %w", op, ErrUserNotFound)
-
 	}
 
 	if err != nil {

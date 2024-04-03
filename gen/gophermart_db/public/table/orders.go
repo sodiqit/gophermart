@@ -17,7 +17,7 @@ type ordersTable struct {
 	postgres.Table
 
 	// Columns
-	ID        postgres.ColumnInteger
+	ID        postgres.ColumnString
 	UserID    postgres.ColumnInteger
 	Status    postgres.ColumnString
 	Accrual   postgres.ColumnFloat
@@ -63,7 +63,7 @@ func newOrdersTable(schemaName, tableName, alias string) *OrdersTable {
 
 func newOrdersTableImpl(schemaName, tableName, alias string) ordersTable {
 	var (
-		IDColumn        = postgres.IntegerColumn("id")
+		IDColumn        = postgres.StringColumn("id")
 		UserIDColumn    = postgres.IntegerColumn("user_id")
 		StatusColumn    = postgres.StringColumn("status")
 		AccrualColumn   = postgres.FloatColumn("accrual")

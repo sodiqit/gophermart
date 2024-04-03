@@ -8,28 +8,28 @@ import (
 
 func TestValidateString(t *testing.T) {
 	tests := []struct {
-		name string
-		value string
+		name           string
+		value          string
 		expectedResult bool
 	}{
 		{
-			name: "valid number",
-			value: "4561261212345467",
+			name:           "valid number",
+			value:          "4561261212345467",
 			expectedResult: true,
 		},
 		{
-			name: "invalid number",
-			value: "4561261212345464",
+			name:           "invalid number",
+			value:          "4561261212345464",
 			expectedResult: false,
 		},
 		{
-			name: "valid number",
-			value: "12345678903",
+			name:           "valid number",
+			value:          "12345678903",
 			expectedResult: true,
 		},
 		{
-			name: "invalid number",
-			value: "12345678904",
+			name:           "invalid number",
+			value:          "12345678904",
 			expectedResult: false,
 		},
 	}

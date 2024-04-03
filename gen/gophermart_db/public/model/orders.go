@@ -12,7 +12,7 @@ import (
 )
 
 type Orders struct {
-	ID        int32 `sql:"primary_key"`
+	ID        string `sql:"primary_key"`
 	UserID    int32
 	Status    string
 	Accrual   *float64

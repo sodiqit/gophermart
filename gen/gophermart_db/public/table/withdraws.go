@@ -20,7 +20,7 @@ type withdrawsTable struct {
 	ID          postgres.ColumnInteger
 	UserID      postgres.ColumnInteger
 	Amount      postgres.ColumnFloat
-	OrderNumber postgres.ColumnInteger
+	OrderNumber postgres.ColumnString
 	CreatedAt   postgres.ColumnTimestamp
 
 	AllColumns     postgres.ColumnList
@@ -65,7 +65,7 @@ func newWithdrawsTableImpl(schemaName, tableName, alias string) withdrawsTable {
 		IDColumn          = postgres.IntegerColumn("id")
 		UserIDColumn      = postgres.IntegerColumn("user_id")
 		AmountColumn      = postgres.FloatColumn("amount")
-		OrderNumberColumn = postgres.IntegerColumn("order_number")
+		OrderNumberColumn = postgres.StringColumn("order_number")
 		CreatedAtColumn   = postgres.TimestampColumn("created_at")
 		allColumns        = postgres.ColumnList{IDColumn, UserIDColumn, AmountColumn, OrderNumberColumn, CreatedAtColumn}
 		mutableColumns    = postgres.ColumnList{UserIDColumn, AmountColumn, OrderNumberColumn, CreatedAtColumn}

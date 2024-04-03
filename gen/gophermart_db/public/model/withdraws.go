@@ -15,6 +15,6 @@ type Withdraws struct {
 	ID          int32 `sql:"primary_key"`
 	UserID      int32
 	Amount      *float64
-	OrderNumber *int32
+	OrderNumber *string
 	CreatedAt   time.Time
 }

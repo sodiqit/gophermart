@@ -11,6 +11,7 @@ import (
 	"github.com/sodiqit/gophermart/internal/logger"
 	"github.com/sodiqit/gophermart/internal/server/auth"
 	"github.com/sodiqit/gophermart/internal/server/config"
+	"github.com/sodiqit/gophermart/internal/server/order"
 	"github.com/sodiqit/gophermart/internal/server/repository"
 )
 
@@ -33,8 +34,10 @@ func RunServer(config *config.Config) error {
 	}
 
 	userRepo := repository.NewDBUserRepository(db)
+	orderRepo := repository.NewDBOrderRepository(db)
 
 	authContainer := auth.NewContainer(config, logger, userRepo)
+	orderContainer := order.NewContainer(config, logger, authContainer.TokenService, orderRepo)
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -42,7 +45,8 @@ func RunServer(config *config.Config) error {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Mount("/api/user/", authContainer.Controller.Route())
+	r.Mount("/api/user", authContainer.Controller.Route())
+	r.Mount("/api/user/orders", orderContainer.Controller.Route())
 
 	logger.Infow("start server", "address", config.Address, "config", config)
 	return http.ListenAndServe(config.Address, r)

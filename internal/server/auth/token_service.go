@@ -15,7 +15,7 @@ type TokenService interface {
 
 type contextKey string
 
-const CLAIMS_CONTEXT_KEY contextKey = "user_info"
+const ClaimsContextKey contextKey = "user_info"
 
 type TokenUser struct {
 	ID int
@@ -68,7 +68,7 @@ func (j *JWTTokenService) Validate(tokenString string) (*Claims, error) {
 }
 
 func ExtractUserFromContext(ctx context.Context) TokenUser {
-	claims, ok := ctx.Value(CLAIMS_CONTEXT_KEY).(*Claims)
+	claims, ok := ctx.Value(ClaimsContextKey).(*Claims)
 
 	if !ok {
 		panic("no claims in context")
@@ -77,8 +77,9 @@ func ExtractUserFromContext(ctx context.Context) TokenUser {
 	return claims.TokenUser
 }
 
-func NewJWTTokenService(secretKey string) *JWTTokenService {
+func NewJWTTokenService(secretKey string, tokenExp time.Duration) *JWTTokenService {
 	return &JWTTokenService{
 		secretKey: secretKey,
+		tokenExp:  tokenExp,
 	}
 }
