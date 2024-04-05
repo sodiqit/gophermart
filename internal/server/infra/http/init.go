@@ -10,6 +10,7 @@ import (
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/sodiqit/gophermart/internal/logger"
 	"github.com/sodiqit/gophermart/internal/server/auth"
+	"github.com/sodiqit/gophermart/internal/server/balance"
 	"github.com/sodiqit/gophermart/internal/server/config"
 	"github.com/sodiqit/gophermart/internal/server/order"
 	"github.com/sodiqit/gophermart/internal/server/repository"
@@ -35,9 +36,11 @@ func RunServer(config *config.Config) error {
 
 	userRepo := repository.NewDBUserRepository(db)
 	orderRepo := repository.NewDBOrderRepository(db)
+	balanceRepo := repository.NewDBBalanceRepository(db)
 
 	authContainer := auth.NewContainer(config, logger, userRepo)
 	orderContainer := order.NewContainer(config, logger, authContainer.TokenService, orderRepo)
+	balanceContainer := balance.NewContainer(config, logger, authContainer.TokenService, balanceRepo)
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -47,6 +50,7 @@ func RunServer(config *config.Config) error {
 
 	r.Mount("/api/user", authContainer.Controller.Route())
 	r.Mount("/api/user/orders", orderContainer.Controller.Route())
+	balanceContainer.Controller.Connect(r, "/api/")
 
 	logger.Infow("start server", "address", config.Address, "config", config)
 	return http.ListenAndServe(config.Address, r)

@@ -17,11 +17,11 @@ type withdrawsTable struct {
 	postgres.Table
 
 	// Columns
-	ID          postgres.ColumnInteger
-	UserID      postgres.ColumnInteger
-	Amount      postgres.ColumnFloat
-	OrderNumber postgres.ColumnString
-	CreatedAt   postgres.ColumnTimestamp
+	ID        postgres.ColumnInteger
+	UserID    postgres.ColumnInteger
+	Amount    postgres.ColumnFloat
+	OrderID   postgres.ColumnString
+	CreatedAt postgres.ColumnTimestamp
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -62,24 +62,24 @@ func newWithdrawsTable(schemaName, tableName, alias string) *WithdrawsTable {
 
 func newWithdrawsTableImpl(schemaName, tableName, alias string) withdrawsTable {
 	var (
-		IDColumn          = postgres.IntegerColumn("id")
-		UserIDColumn      = postgres.IntegerColumn("user_id")
-		AmountColumn      = postgres.FloatColumn("amount")
-		OrderNumberColumn = postgres.StringColumn("order_number")
-		CreatedAtColumn   = postgres.TimestampColumn("created_at")
-		allColumns        = postgres.ColumnList{IDColumn, UserIDColumn, AmountColumn, OrderNumberColumn, CreatedAtColumn}
-		mutableColumns    = postgres.ColumnList{UserIDColumn, AmountColumn, OrderNumberColumn, CreatedAtColumn}
+		IDColumn        = postgres.IntegerColumn("id")
+		UserIDColumn    = postgres.IntegerColumn("user_id")
+		AmountColumn    = postgres.FloatColumn("amount")
+		OrderIDColumn   = postgres.StringColumn("order_id")
+		CreatedAtColumn = postgres.TimestampColumn("created_at")
+		allColumns      = postgres.ColumnList{IDColumn, UserIDColumn, AmountColumn, OrderIDColumn, CreatedAtColumn}
+		mutableColumns  = postgres.ColumnList{UserIDColumn, AmountColumn, OrderIDColumn, CreatedAtColumn}
 	)
 
 	return withdrawsTable{
 		Table: postgres.NewTable(schemaName, tableName, alias, allColumns...),
 
 		//Columns
-		ID:          IDColumn,
-		UserID:      UserIDColumn,
-		Amount:      AmountColumn,
-		OrderNumber: OrderNumberColumn,
-		CreatedAt:   CreatedAtColumn,
+		ID:        IDColumn,
+		UserID:    UserIDColumn,
+		Amount:    AmountColumn,
+		OrderID:   OrderIDColumn,
+		CreatedAt: CreatedAtColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

@@ -12,9 +12,9 @@ import (
 )
 
 type Withdraws struct {
-	ID          int32 `sql:"primary_key"`
-	UserID      int32
-	Amount      *float64
-	OrderNumber *string
-	CreatedAt   time.Time
+	ID        int32 `sql:"primary_key"`
+	UserID    int32
+	Amount    float64
+	OrderID   string
+	CreatedAt time.Time
 }
