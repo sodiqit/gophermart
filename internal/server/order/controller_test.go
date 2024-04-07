@@ -87,7 +87,7 @@ func TestOrderController_handleOrderUpload(t *testing.T) {
 			url:            "/orders",
 			body:           "12345678903",
 			contentType:    "text/plain",
-			expectedStatus: http.StatusCreated,
+			expectedStatus: http.StatusAccepted,
 			setupMock: func() {
 				tokenServiceMock.EXPECT().Validate(gomock.Any()).Return(&auth.Claims{TokenUser: auth.TokenUser{ID: 1}}, nil)
 				orderServiceMock.EXPECT().Upload(gomock.Any(), gomock.Any(), gomock.Any()).Times(1).Return(nil)

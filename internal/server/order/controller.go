@@ -115,5 +115,5 @@ func mapUploadResultToHttpAnswer(w http.ResponseWriter, err error, logger logger
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusAccepted)
 }
