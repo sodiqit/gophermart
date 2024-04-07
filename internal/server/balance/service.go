@@ -2,10 +2,14 @@ package balance
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/sodiqit/gophermart/internal/server/dtos"
 	"github.com/sodiqit/gophermart/internal/server/repository"
 )
+
+var ErrInsufficientFunds = errors.New("insufficient funds")
 
 type BalanceService interface {
 	GetTotalBalance(ctx context.Context, userID int) (dtos.Balance, error)
@@ -22,11 +26,25 @@ func (s *SimpleBalanceService) GetTotalBalance(ctx context.Context, userID int) 
 }
 
 func (s *SimpleBalanceService) Withdraw(ctx context.Context, userID int, orderID string, sum float64) error {
-	return nil //TODO: implement
+	op := "balanceService.withdraw"
+
+	balance, err := s.balanceRepo.GetBalanceWithWithdrawals(ctx, userID)
+
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	if balance.Current-sum < 0 {
+		return ErrInsufficientFunds
+	}
+
+	_, err = s.balanceRepo.CreateWithdraw(ctx, userID, orderID, sum)
+
+	return err
 }
 
 func (s *SimpleBalanceService) GetWithdrawals(ctx context.Context, userID int) ([]dtos.Withdraw, error) {
-	return nil, nil //TODO: implement
+	return s.balanceRepo.GetWithdrawalsByUser(ctx, userID)
 }
 
 func NewService(balanceRepo repository.BalanceRepository) *SimpleBalanceService {
@@ -34,4 +52,3 @@ func NewService(balanceRepo repository.BalanceRepository) *SimpleBalanceService 
 		balanceRepo: balanceRepo,
 	}
 }
-

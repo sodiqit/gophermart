@@ -78,7 +78,7 @@ func (r *DBBalanceRepository) GetBalanceWithWithdrawals(ctx context.Context, use
 func (r *DBBalanceRepository) CreateWithdraw(ctx context.Context, userID int, orderID string, sum float64) (int, error) {
 	op := "balanceRepo.createWithdraw"
 
-	stmt := table.Orders.INSERT(table.Withdraws.Amount, table.Withdraws.UserID, table.Withdraws.OrderID).
+	stmt := table.Withdraws.INSERT(table.Withdraws.Amount, table.Withdraws.UserID, table.Withdraws.OrderID).
 		VALUES(sum, userID, orderID).
 		RETURNING(table.Withdraws.ID)
 
