@@ -26,6 +26,8 @@ type OrderRepository interface {
 	Create(ctx context.Context, userID int, orderNumber string, status string) (string, error)
 	FindByOrderNumber(ctx context.Context, orderNumber string) (dtos.Order, error)
 	GetListByUser(ctx context.Context, userID int) ([]dtos.Order, error)
+	GetOrdersForProcessing(ctx context.Context, pool int64) ([]string, error)
+	UpdateOrder(ctx context.Context, orderID string, status string, accrual *float64) error
 }
 
 type DBOrderRepository struct {
@@ -90,6 +92,40 @@ func (r *DBOrderRepository) GetListByUser(ctx context.Context, userID int) ([]dt
 	}
 
 	return result, nil
+}
+
+func (r *DBOrderRepository) GetOrdersForProcessing(ctx context.Context, pool int64) ([]string, error) {
+	op := "orderRepo.getOrdersForProcessing"
+
+	stmt := table.Orders.SELECT(table.Orders.ID).
+		WHERE(
+			table.Orders.Status.IN(postgres.String(OrderStatusNew), postgres.String(OrderStatusProcessing)),
+		).
+		LIMIT(pool)
+
+	var dest []model.Orders
+
+	err := stmt.QueryContext(ctx, r.db, &dest)
+
+	if err != nil {
+		return make([]string, 0), fmt.Errorf("%s: %w", op, err)
+	}
+
+	result := make([]string, len(dest))
+
+	for i, entity := range dest {
+		result[i] = entity.ID
+	}
+
+	return result, nil
+}
+
+func (r *DBOrderRepository) UpdateOrder(ctx context.Context, orderID string, status string, accrual *float64) error {
+	stmt := table.Orders.UPDATE(table.Orders.Status, table.Orders.Accrual).SET(status, accrual).WHERE(table.Orders.ID.EQ(postgres.String(orderID)))
+
+	_, err := stmt.ExecContext(ctx, r.db)
+
+	return err
 }
 
 func mapOrderEntityToDto(entity model.Orders) dtos.Order {

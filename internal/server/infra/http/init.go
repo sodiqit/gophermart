@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -9,6 +10,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/sodiqit/gophermart/internal/logger"
+	"github.com/sodiqit/gophermart/internal/server/accrual"
 	"github.com/sodiqit/gophermart/internal/server/auth"
 	"github.com/sodiqit/gophermart/internal/server/balance"
 	"github.com/sodiqit/gophermart/internal/server/config"
@@ -38,6 +40,9 @@ func RunServer(config *config.Config) error {
 	orderRepo := repository.NewDBOrderRepository(db)
 	balanceRepo := repository.NewDBBalanceRepository(db)
 
+	accrualClient := accrual.NewHTTPAccrualClient(fmt.Sprintf("%s/api/orders/", config.AccrualAddress) + "%s")
+	accrualOrderProcessor := accrual.NewOrderProcessor(20, orderRepo, logger, accrualClient)
+
 	authContainer := auth.NewContainer(config, logger, userRepo)
 	orderContainer := order.NewContainer(config, logger, authContainer.TokenService, orderRepo)
 	balanceContainer := balance.NewContainer(config, logger, authContainer.TokenService, balanceRepo)
@@ -51,6 +56,8 @@ func RunServer(config *config.Config) error {
 	r.Mount("/api/user", authContainer.Controller.Route())
 	r.Mount("/api/user/orders", orderContainer.Controller.Route())
 	balanceContainer.Controller.Connect(r, "/api/")
+
+	go accrualOrderProcessor.Run(context.TODO()) //TODO: use shutdown context
 
 	logger.Infow("start server", "address", config.Address, "config", config)
 	return http.ListenAndServe(config.Address, r)

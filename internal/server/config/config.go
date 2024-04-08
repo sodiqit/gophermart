@@ -9,11 +9,12 @@ import (
 )
 
 type Config struct {
-	Address      string `env:"RUN_ADDRESS"`
-	LogLevel     string `env:"LOG_LEVEL"`
-	DatabaseDSN  string `env:"DATABASE_URI"`
-	JWTSecretKey string `env:"JWT_SECRET"`
-	JWTTimeExp   time.Duration
+	Address        string `env:"RUN_ADDRESS"`
+	AccrualAddress string `env:"ACCRUAL_SYSTEM_ADDRESS"`
+	LogLevel       string `env:"LOG_LEVEL"`
+	DatabaseDSN    string `env:"DATABASE_URI"`
+	JWTSecretKey   string `env:"JWT_SECRET"`
+	JWTTimeExp     time.Duration
 
 	JWTTimeExpInMinutes int `env:"JWT_TIME_EXP"`
 }
@@ -25,6 +26,7 @@ func ParseConfig() *Config {
 	flag.StringVar(&config.DatabaseDSN, "d", "", "database connection string")
 	flag.StringVar(&config.JWTSecretKey, "k", "", "jwt secret key")
 	flag.IntVar(&config.JWTTimeExpInMinutes, "t", 10, "jwt time exp in minutes")
+	flag.StringVar(&config.AccrualAddress, "r", "http://localhost:8080", "accrual address")
 	flag.Parse()
 
 	if err := env.Parse(&config); err != nil {
