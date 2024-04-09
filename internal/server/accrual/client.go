@@ -82,6 +82,8 @@ func (c *HTTPAccrualClient) GetOrderInfo(ctx context.Context, orderID string) (O
 		return OrderInfoDTO{}, fmt.Errorf("%w: %s", ErrOrderNotFound, orderID)
 	}
 
+	fmt.Println("result from resty", response.Result())
+
 	result, ok := response.Result().(OrderInfoDTO)
 
 	if !ok {
