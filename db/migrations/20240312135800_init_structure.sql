@@ -1,0 +1,38 @@
+-- +goose Up
+-- +goose StatementBegin
+CREATE TABLE IF NOT EXISTS users(
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS orders(
+    id VARCHAR(255) PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    accrual DOUBLE PRECISION,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS withdraws(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    amount DOUBLE PRECISION NOT NULL,
+    order_id VARCHAR(255) UNIQUE NOT NULL, 
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
+-- +goose StatementEnd
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE IF EXISTS users CASCADE;
+
+DROP TABLE IF EXISTS orders CASCADE;
+
+DROP TABLE IF EXISTS withdraws CASCADE;
+
+-- +goose StatementEnd
