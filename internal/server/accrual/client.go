@@ -19,7 +19,7 @@ var ErrOrderIncorrectResponseBody = errors.New("order response body not match")
 var ErrRateLimit = errors.New("rate limit")
 
 type OrderInfoDTO struct {
-	OrderId string   `json:"order"`
+	OrderID string   `json:"order"`
 	Accrual *float64 `json:"accrual,omitempty"`
 	Status  string   `json:"status"`
 }

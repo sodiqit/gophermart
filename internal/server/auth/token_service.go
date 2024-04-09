@@ -9,7 +9,7 @@ import (
 )
 
 type TokenService interface {
-	Build(userId int) (string, error)
+	Build(userID int) (string, error)
 	Validate(token string) (*Claims, error)
 }
 
@@ -31,12 +31,12 @@ type JWTTokenService struct {
 	tokenExp  time.Duration
 }
 
-func (j *JWTTokenService) Build(userId int) (string, error) {
+func (j *JWTTokenService) Build(userID int) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(j.tokenExp)),
 		},
-		TokenUser: TokenUser{ID: userId},
+		TokenUser: TokenUser{ID: userID},
 	})
 
 	tokenString, err := token.SignedString([]byte(j.secretKey))

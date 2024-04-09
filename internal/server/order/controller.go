@@ -54,7 +54,7 @@ func (c *OrderController) handleUploadOrder(w http.ResponseWriter, r *http.Reque
 	}
 
 	err = c.orderService.Upload(r.Context(), user.ID, body)
-	mapUploadResultToHttpAnswer(w, err, logger)
+	mapUploadResultToHTTPAnswer(w, err, logger)
 }
 
 func (c *OrderController) handleGetUserList(w http.ResponseWriter, r *http.Request) {
@@ -98,7 +98,7 @@ func NewController(logger logger.Logger, tokenService auth.TokenService, orderSe
 	}
 }
 
-func mapUploadResultToHttpAnswer(w http.ResponseWriter, err error, logger logger.Logger) {
+func mapUploadResultToHTTPAnswer(w http.ResponseWriter, err error, logger logger.Logger) {
 	if errors.Is(err, ErrUserAlreadyUploadOrder) {
 		w.WriteHeader(http.StatusOK)
 		return

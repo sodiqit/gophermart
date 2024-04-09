@@ -48,7 +48,7 @@ func (p *OrderProcessor) worker(ctx context.Context, workerID int) {
 				continue
 			}
 
-			err = p.orderRepo.UpdateOrder(ctx, result.OrderId, result.Status, result.Accrual)
+			err = p.orderRepo.UpdateOrder(ctx, result.OrderID, result.Status, result.Accrual)
 
 			if err != nil {
 				logger.Errorw("failed to update order", "err", err)

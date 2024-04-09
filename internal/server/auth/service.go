@@ -44,13 +44,13 @@ func (s *SimpleAuthService) Register(ctx context.Context, username string, passw
 		return "", err
 	}
 
-	userId, err := s.userRepo.Create(ctx, dtos.User{Login: username, PasswordHash: string(passHash)})
+	userID, err := s.userRepo.Create(ctx, dtos.User{Login: username, PasswordHash: string(passHash)})
 
 	if err != nil {
 		return "", err
 	}
 
-	return s.tokenService.Build(userId)
+	return s.tokenService.Build(userID)
 }
 
 func (s *SimpleAuthService) Login(ctx context.Context, username string, password string) (string, error) {
