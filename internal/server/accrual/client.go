@@ -82,15 +82,13 @@ func (c *HTTPAccrualClient) GetOrderInfo(ctx context.Context, orderID string) (O
 		return OrderInfoDTO{}, fmt.Errorf("%w: %s", ErrOrderNotFound, orderID)
 	}
 
-	fmt.Println("result from resty", response.Result())
-
-	result, ok := response.Result().(OrderInfoDTO)
+	result, ok := response.Result().(*OrderInfoDTO)
 
 	if !ok {
 		return OrderInfoDTO{}, fmt.Errorf("%w. Got: %s. Status code: %d", ErrOrderIncorrectResponseBody, response.String(), response.StatusCode())
 	}
 
-	return result, nil
+	return *result, nil
 }
 
 func NewHTTPAccrualClient(endpointTemplate string) *HTTPAccrualClient {
