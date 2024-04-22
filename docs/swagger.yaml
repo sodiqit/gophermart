@@ -1,0 +1,260 @@
+basePath: /api/
+definitions:
+  auth.LoginRequestDTO:
+    properties:
+      login:
+        type: string
+      password:
+        maxLength: 32
+        minLength: 4
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  auth.RegisterRequestDTO:
+    properties:
+      login:
+        type: string
+      password:
+        maxLength: 32
+        minLength: 4
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  balance.WithdrawRequestDTO:
+    properties:
+      order:
+        type: string
+      sum:
+        type: number
+    required:
+    - order
+    - sum
+    type: object
+  dtos.Balance:
+    properties:
+      current:
+        type: number
+      withdrawn:
+        type: number
+    type: object
+  dtos.Order:
+    properties:
+      accrual:
+        description: |-
+          The accrual points for the order, if available
+          This field is optional in the JSON response
+        type: number
+      number:
+        type: string
+      status:
+        type: string
+      uploaded_at:
+        type: string
+    type: object
+  dtos.Withdraw:
+    properties:
+      order:
+        type: string
+      processed_at:
+        type: string
+      sum:
+        type: number
+    type: object
+info:
+  contact: {}
+  description: Сервис накопительный системы.
+  title: GopherMart API
+  version: "1.0"
+paths:
+  /api/user/balance:
+    get:
+      description: get total user balance
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.Balance'
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: get balance
+      tags:
+      - balance
+  /api/user/balance/withdraw:
+    post:
+      consumes:
+      - application/json
+      description: Process new withdraw request
+      parameters:
+      - description: Withdraw body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/balance.WithdrawRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "402":
+          description: Not enough balance
+          schema:
+            type: string
+        "422":
+          description: Not correct order number
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: create withdraw
+      tags:
+      - balance
+  /api/user/login:
+    post:
+      consumes:
+      - application/json
+      description: login user
+      parameters:
+      - description: Login body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequestDTO'
+      responses:
+        "200":
+          description: OK
+          headers:
+            Authorization:
+              description: Bearer token
+              type: string
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: login
+      tags:
+      - auth
+  /api/user/orders:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.Order'
+            type: array
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: get list of user orders
+      tags:
+      - order
+    post:
+      consumes:
+      - plain/text
+      parameters:
+      - description: OrderID
+        in: body
+        name: body
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "202":
+          description: Accepted
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+        "422":
+          description: Not correct order number
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: upload new order
+      tags:
+      - order
+  /api/user/register:
+    post:
+      consumes:
+      - application/json
+      description: register new user
+      parameters:
+      - description: Register body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterRequestDTO'
+      responses:
+        "200":
+          description: OK
+          headers:
+            Authorization:
+              description: Bearer token
+              type: string
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      summary: register
+      tags:
+      - auth
+  /api/user/withdrawals:
+    get:
+      description: get user withdrawals
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.Withdraw'
+            type: array
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: get withdrawals
+      tags:
+      - balance
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

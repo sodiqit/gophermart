@@ -30,6 +30,18 @@ func (c *BalanceController) Connect(r *chi.Mux, basePath string) {
 	})
 }
 
+// handleGetUserBalance godoc
+//
+//	@Summary		get balance
+//	@Description	get total user balance
+//	@Tags			balance
+//
+//	@Security		ApiKeyAuth
+//	@Produce		json
+//	@Success		200	{object}	dtos.Balance
+//	@Failure		401
+//	@Failure		500
+//	@Router			/api/user/balance [get]
 func (c *BalanceController) handleGetUserBalance(w http.ResponseWriter, r *http.Request) {
 	op := "balanceController.handleGetUserBalance"
 
@@ -57,6 +69,18 @@ func (c *BalanceController) handleGetUserBalance(w http.ResponseWriter, r *http.
 	w.Write(result)
 }
 
+// handleGetUserBalance godoc
+//
+//	@Summary		get withdrawals
+//	@Description	get user withdrawals
+//	@Tags			balance
+//
+//	@Security		ApiKeyAuth
+//	@Produce		json
+//	@Success		200	{array}	dtos.Withdraw
+//	@Failure		401
+//	@Failure		500
+//	@Router			/api/user/withdrawals [get]
 func (c *BalanceController) handleGetUserWithdrawals(w http.ResponseWriter, r *http.Request) {
 	op := "balanceController.handleGetUserWithdrawals"
 
@@ -89,6 +113,23 @@ func (c *BalanceController) handleGetUserWithdrawals(w http.ResponseWriter, r *h
 	w.Write(result)
 }
 
+// handleWithdraw godoc
+//
+//	@Summary		create withdraw
+//	@Description	Process new withdraw request
+//	@Tags			balance
+//
+//	@Param			body	body	WithdrawRequestDTO	true	"Withdraw body"
+//	@Security		ApiKeyAuth
+//	@Accept			json
+//	@Produce		json
+//	@Success		200
+//	@Failure		400
+//	@Failure		401
+//	@Failure		402	string	true	"Not enough balance"
+//	@Failure		422	string	true	"Not correct order number"
+//	@Failure		500
+//	@Router			/api/user/balance/withdraw [post]
 func (c *BalanceController) handleWithdraw(w http.ResponseWriter, r *http.Request) {
 	op := "balanceController.handleWithdraw"
 
@@ -135,23 +176,3 @@ func NewController(logger logger.Logger, tokenService auth.TokenService, balance
 		balanceService,
 	}
 }
-
-// func mapUploadResultToHttpAnswer(w http.ResponseWriter, err error, logger logger.Logger) {
-// 	if errors.Is(err, ErrUserAlreadyUploadOrder) {
-// 		w.WriteHeader(http.StatusOK)
-// 		return
-// 	}
-
-// 	if errors.Is(err, ErrOrderAlreadyUploadByAnotherUser) {
-// 		http.Error(w, "Order already uploaded by another user", http.StatusConflict)
-// 		return
-// 	}
-
-// 	if err != nil {
-// 		logger.Errorw("unexpected error while upload order", "err", err.Error())
-// 		http.Error(w, "Internal server error", http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	w.WriteHeader(http.StatusCreated)
-// }
