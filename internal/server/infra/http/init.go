@@ -19,12 +19,14 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
-func RunServer(config *config.Config) error {
+var srv http.Server
+
+func RunServer(ctx context.Context, config *config.Config) error {
 	logger := logger.New("info")
 
 	defer logger.Sync()
 
-	pool, err := pgxpool.New(context.Background(), config.DatabaseDSN)
+	pool, err := pgxpool.New(ctx, config.DatabaseDSN)
 	if err != nil {
 		return err
 	}
@@ -62,8 +64,14 @@ func RunServer(config *config.Config) error {
 	r.Mount("/api/user/orders", orderContainer.Controller.Route())
 	balanceContainer.Controller.Connect(r, "/api/")
 
-	go accrualOrderProcessor.Run(context.TODO()) //TODO: use shutdown context
+	go accrualOrderProcessor.Run(ctx)
 
 	logger.Infow("start server", "address", config.Address, "config", config)
-	return http.ListenAndServe(config.Address, r)
+	srv = http.Server{Addr: config.Address, Handler: r}
+	return srv.ListenAndServe()
+}
+
+func StopServer(ctx context.Context) error {
+	fmt.Println("\nGracefully shutdown HTTP server")
+	return srv.Shutdown(ctx)
 }
