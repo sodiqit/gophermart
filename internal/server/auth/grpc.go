@@ -32,12 +32,40 @@ func (s *AuthServer) Login(ctx context.Context, in *proto.LoginRequest) (*proto.
 	return &response, nil
 }
 
+func (s *AuthServer) Register(ctx context.Context, in *proto.RegisterRequest) (*proto.RegisterResponse, error) {
+	var response proto.RegisterResponse
+
+	logger := s.logger.With("op", proto.Auth_Register_FullMethodName)
+
+	result, err := s.authService.Register(ctx, in.Email, in.Password)
+
+	if err != nil {
+		return nil, mapRegisterServiceError(err, logger)
+	}
+
+	response.Token = result
+
+	return &response, nil
+}
+
 func mapLoginServiceError(err error, logger logger.Logger) error {
 	code := codes.Internal
 	msg := "Internal server error"
 
 	if errors.Is(err, ErrUserNotFound) || errors.Is(err, ErrIncorrectPassword) {
 		code = codes.Unauthenticated
+		msg = err.Error()
+	}
+
+	return status.Error(code, msg)
+}
+
+func mapRegisterServiceError(err error, logger logger.Logger) error {
+	code := codes.Internal
+	msg := "Internal server error"
+
+	if errors.Is(err, ErrUserAlreadyExist) {
+		code = codes.AlreadyExists
 		msg = err.Error()
 	}
 
