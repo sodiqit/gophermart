@@ -16,6 +16,7 @@ type Logger interface {
 	Panicw(msg string, keysAndValues ...interface{})
 	Fatalw(msg string, keysAndValues ...interface{})
 	With(args ...interface{}) Logger
+	Log(lvl zapcore.Level, args ...interface{})
 
 	Sync() error
 }

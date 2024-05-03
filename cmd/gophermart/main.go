@@ -14,6 +14,8 @@ import (
 
 	_ "github.com/sodiqit/gophermart/docs"
 	"github.com/sodiqit/gophermart/internal/server/config"
+	"github.com/sodiqit/gophermart/internal/server/infra"
+	"github.com/sodiqit/gophermart/internal/server/infra/grpc"
 	"github.com/sodiqit/gophermart/internal/server/infra/http"
 )
 
@@ -42,6 +44,12 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 
+	deps, err := infra.NewAppContainer(ctx, config)
+
+	if err != nil {
+		log.Fatalf("Error while init app deps: %s", err)
+	}
+
 	c := make(chan os.Signal, 1)
 
 	quit := make(chan struct{})
@@ -50,6 +58,7 @@ func main() {
 	go func() {
 		<-c
 		cancel()
+		grpc.StopServer()
 		err := http.StopServer(context.Background())
 		if err != nil {
 			log.Fatalln("Error while shutdown server", err.Error())
@@ -57,7 +66,9 @@ func main() {
 		close(quit)
 	}()
 
-	err := http.RunServer(ctx, config)
+	go grpc.RunServer(ctx, deps)
+
+	err = http.RunServer(ctx, deps)
 	if err != nil && !errors.Is(err, netHttp.ErrServerClosed) {
 		fmt.Println("Error while running gophermart server", err.Error())
 		close(quit)

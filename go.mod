@@ -10,6 +10,7 @@ require (
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/go-resty/resty/v2 v2.12.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
 	github.com/jackc/pgx/v5 v5.5.5
 	github.com/sonatard/noctx v0.0.2
 	github.com/stretchr/testify v1.9.0
@@ -20,6 +21,8 @@ require (
 	golang.org/x/crypto v0.22.0
 	golang.org/x/time v0.5.0
 	golang.org/x/tools v0.20.0
+	google.golang.org/grpc v1.63.2
+	google.golang.org/protobuf v1.34.0
 	honnef.co/go/tools v0.4.7
 )
 
@@ -52,5 +55,6 @@ require (
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240227224415-6ceb2ff114de // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
