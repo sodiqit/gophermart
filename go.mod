@@ -3,6 +3,7 @@ module github.com/sodiqit/gophermart
 go 1.20
 
 require (
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.31.0-20230802163732-1c33ebd9ecfa.1
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/fatih/errwrap v1.6.0
 	github.com/go-chi/chi/v5 v5.0.12

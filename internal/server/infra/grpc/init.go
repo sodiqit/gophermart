@@ -8,7 +8,7 @@ import (
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
-	"github.com/sodiqit/gophermart/gen/proto/auth"
+	authv1 "github.com/sodiqit/gophermart/gen/proto/auth/v1"
 	"github.com/sodiqit/gophermart/internal/logger"
 	"github.com/sodiqit/gophermart/internal/server/infra"
 	"go.uber.org/zap/zapcore"

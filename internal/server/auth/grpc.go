@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	proto "github.com/sodiqit/gophermart/gen/proto/auth"
+	proto "github.com/sodiqit/gophermart/gen/proto/auth/v1"
 	"github.com/sodiqit/gophermart/internal/logger"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
