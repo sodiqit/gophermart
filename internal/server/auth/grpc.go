@@ -4,14 +4,14 @@ import (
 	"context"
 	"errors"
 
-	proto "github.com/sodiqit/gophermart/gen/proto"
+	proto "github.com/sodiqit/gophermart/gen/proto/auth"
 	"github.com/sodiqit/gophermart/internal/logger"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type AuthServer struct {
-	proto.UnimplementedAuthServer
+	proto.UnimplementedAuthServiceServer
 	logger      logger.Logger
 	authService AuthService
 }
@@ -19,7 +19,7 @@ type AuthServer struct {
 func (s *AuthServer) Login(ctx context.Context, in *proto.LoginRequest) (*proto.LoginResponse, error) {
 	var response proto.LoginResponse
 
-	logger := s.logger.With("op", proto.Auth_Login_FullMethodName)
+	logger := s.logger.With("op", proto.AuthService_Login_FullMethodName)
 
 	result, err := s.authService.Login(ctx, in.Email, in.Password)
 
@@ -35,7 +35,7 @@ func (s *AuthServer) Login(ctx context.Context, in *proto.LoginRequest) (*proto.
 func (s *AuthServer) Register(ctx context.Context, in *proto.RegisterRequest) (*proto.RegisterResponse, error) {
 	var response proto.RegisterResponse
 
-	logger := s.logger.With("op", proto.Auth_Register_FullMethodName)
+	logger := s.logger.With("op", proto.AuthService_Register_FullMethodName)
 
 	result, err := s.authService.Register(ctx, in.Email, in.Password)
 

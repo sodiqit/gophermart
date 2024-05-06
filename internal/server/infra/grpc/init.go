@@ -8,7 +8,7 @@ import (
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
-	authProto "github.com/sodiqit/gophermart/gen/proto"
+	"github.com/sodiqit/gophermart/gen/proto/auth"
 	"github.com/sodiqit/gophermart/internal/logger"
 	"github.com/sodiqit/gophermart/internal/server/infra"
 	"go.uber.org/zap/zapcore"
@@ -41,7 +41,7 @@ func RunServer(ctx context.Context, deps *infra.AppContainer) error {
 		logging.UnaryServerInterceptor(InterceptorLogger(logger), []logging.Option{}...),
 	))
 
-	authProto.RegisterAuthServer(srv, deps.AuthContainer.GRPCServer)
+	authv1.RegisterAuthServiceServer(srv, deps.AuthContainer.GRPCServer)
 
 	logger.Infow("start gRPC server", "port", config.GRPCAddress)
 

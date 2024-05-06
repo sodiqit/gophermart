@@ -66,7 +66,12 @@ func main() {
 		close(quit)
 	}()
 
-	go grpc.RunServer(ctx, deps)
+	go func() {
+		err := grpc.RunServer(ctx, deps)
+		if err != nil {
+			log.Fatalln("Error while run grpc server", err.Error())
+		}
+	}()
 
 	err = http.RunServer(ctx, deps)
 	if err != nil && !errors.Is(err, netHttp.ErrServerClosed) {

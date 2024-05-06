@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-package authgrpc;
-
-option go_package = "auth.proto";
+package auth.v1;
 
 message LoginRequest {
   string email = 1;
@@ -22,7 +20,7 @@ message RegisterResponse {
   string token = 1;
 }
 
-service Auth {
+service AuthService {
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc Register(RegisterRequest) returns (RegisterResponse);
 } 
