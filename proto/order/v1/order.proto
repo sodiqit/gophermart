@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package order.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/sodiqit/gophermart/gen/proto/order/v1";
+
+message UploadRequest {
+  string order_id = 1;
+}
+
+message UploadResponse {}
+
+message GetListRequest {}
+
+message Order {
+  string number = 1;
+  optional double accrual = 2;
+
+  enum OrderStatus {
+    NEW = 0;
+    PROCESSING = 1;
+    INVALID = 2;
+    PROCESSED = 3;
+  }
+
+  OrderStatus status = 3; 
+  google.protobuf.Timestamp uploaded_at = 4;
+}
+
+message GetListResponse {
+  repeated Order orders = 1;
+}
+
+service OrderService {
+  rpc Upload(UploadRequest) returns (UploadResponse);
+  rpc GetList(GetListRequest) returns (GetListResponse);
+} 

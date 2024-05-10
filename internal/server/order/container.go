@@ -9,13 +9,16 @@ import (
 
 type OrderContainer struct {
 	Controller *OrderController
+	GRPCServer *OrderServer
 }
 
 func NewContainer(config *config.Config, logger logger.Logger, tokenService auth.TokenService, orderRepo repository.OrderRepository) *OrderContainer {
 	orderService := NewSimpleOrderService(orderRepo)
 	orderController := NewController(logger, tokenService, orderService)
+	orderServer := NewOrderServer(logger, orderService)
 
 	return &OrderContainer{
 		Controller: orderController,
+		GRPCServer: orderServer,
 	}
 }

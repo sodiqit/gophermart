@@ -9,7 +9,9 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	authv1 "github.com/sodiqit/gophermart/gen/proto/auth/v1"
+	orderv1 "github.com/sodiqit/gophermart/gen/proto/order/v1"
 	"github.com/sodiqit/gophermart/internal/logger"
+	"github.com/sodiqit/gophermart/internal/server/auth"
 	"github.com/sodiqit/gophermart/internal/server/infra"
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
@@ -36,12 +38,16 @@ func RunServer(ctx context.Context, deps *infra.AppContainer) error {
 		}),
 	}
 
+	protectedMethods := []string{orderv1.OrderService_Upload_FullMethodName, orderv1.OrderService_GetList_FullMethodName}
+
 	srv = grpc.NewServer(grpc.ChainUnaryInterceptor(
 		recovery.UnaryServerInterceptor(recoveryOpts...),
 		logging.UnaryServerInterceptor(InterceptorLogger(logger), []logging.Option{}...),
+		auth.UnaryAuthInterceptor(deps.AuthContainer.TokenService, protectedMethods),
 	))
 
 	authv1.RegisterAuthServiceServer(srv, deps.AuthContainer.GRPCServer)
+	orderv1.RegisterOrderServiceServer(srv, deps.OrderContainer.GRPCServer)
 
 	logger.Infow("start gRPC server", "port", config.GRPCAddress)
 

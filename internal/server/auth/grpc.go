@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/bufbuild/protovalidate-go"
 	proto "github.com/sodiqit/gophermart/gen/proto/auth/v1"
 	"github.com/sodiqit/gophermart/internal/logger"
 	"google.golang.org/grpc/codes"
@@ -14,6 +15,7 @@ type AuthServer struct {
 	proto.UnimplementedAuthServiceServer
 	logger      logger.Logger
 	authService AuthService
+	validator   *protovalidate.Validator
 }
 
 func (s *AuthServer) Login(ctx context.Context, in *proto.LoginRequest) (*proto.LoginResponse, error) {
@@ -21,7 +23,13 @@ func (s *AuthServer) Login(ctx context.Context, in *proto.LoginRequest) (*proto.
 
 	logger := s.logger.With("op", proto.AuthService_Login_FullMethodName)
 
-	result, err := s.authService.Login(ctx, in.Email, in.Password)
+	err := s.validator.Validate(in)
+
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	result, err := s.authService.Login(ctx, in.Nickname, in.Password)
 
 	if err != nil {
 		return nil, mapLoginServiceError(err, logger)
@@ -37,7 +45,13 @@ func (s *AuthServer) Register(ctx context.Context, in *proto.RegisterRequest) (*
 
 	logger := s.logger.With("op", proto.AuthService_Register_FullMethodName)
 
-	result, err := s.authService.Register(ctx, in.Email, in.Password)
+	err := s.validator.Validate(in)
+
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	result, err := s.authService.Register(ctx, in.Nickname, in.Password)
 
 	if err != nil {
 		return nil, mapRegisterServiceError(err, logger)
@@ -73,8 +87,13 @@ func mapRegisterServiceError(err error, logger logger.Logger) error {
 }
 
 func NewAuthServer(logger logger.Logger, authService AuthService) *AuthServer {
+	v, err := protovalidate.New()
+	if err != nil {
+		panic(err)
+	}
 	return &AuthServer{
 		logger:      logger,
 		authService: authService,
+		validator:   v,
 	}
 }
