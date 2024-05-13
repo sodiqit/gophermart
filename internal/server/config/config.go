@@ -10,6 +10,7 @@ import (
 
 type Config struct {
 	Address        string `env:"RUN_ADDRESS"`
+	GRPCAddress    string `env:"GRPC_ADDRESS"`
 	AccrualAddress string `env:"ACCRUAL_SYSTEM_ADDRESS"`
 	LogLevel       string `env:"LOG_LEVEL"`
 	DatabaseDSN    string `env:"DATABASE_URI"`
@@ -21,7 +22,8 @@ type Config struct {
 
 func ParseConfig() *Config {
 	var config Config
-	flag.StringVar(&config.Address, "a", ":8080", "address and port to run server")
+	flag.StringVar(&config.Address, "a", ":8080", "address and port to run HTTP server")
+	flag.StringVar(&config.GRPCAddress, "g", ":3002", "address and port to run gRPC server")
 	flag.StringVar(&config.LogLevel, "l", "info", "log level")
 	flag.StringVar(&config.DatabaseDSN, "d", "", "database connection string")
 	flag.StringVar(&config.JWTSecretKey, "k", "", "jwt secret key")

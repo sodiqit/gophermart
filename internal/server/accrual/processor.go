@@ -24,8 +24,6 @@ type OrderProcessor struct {
 }
 
 func (p *OrderProcessor) worker(ctx context.Context, workerID int) {
-	defer p.wg.Done()
-
 	logger := p.logger.With("workerID", workerID)
 
 	for {
@@ -71,9 +69,9 @@ func (p *OrderProcessor) Run(ctx context.Context) error {
 	for {
 		select {
 		case <-ctx.Done():
-			p.wg.Wait()
-			close(p.orderQueue)
 			p.logger.Infow("stop processing orders")
+			close(p.orderQueue)
+			p.wg.Wait()
 			return ctx.Err()
 		default:
 			orderList, err := p.orderRepo.GetOrdersForProcessing(ctx, int64(p.poolSize)) // TODO: handle if orders deadlock in accrual system

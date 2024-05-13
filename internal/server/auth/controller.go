@@ -27,6 +27,20 @@ func (c *AuthController) Route() *chi.Mux {
 	return r
 }
 
+// handleRegister godoc
+//
+//	@Summary		register
+//	@Description	register new user
+//	@Tags			auth
+//
+//	@Param			body body	RegisterRequestDTO	true	"Register body"
+//
+//	@Accept			json
+//	@Success		200
+//	@Failure		409
+//	@Failure		500
+//	@Header			200	{string}	Authorization	"Bearer token"
+//	@Router			/api/user/register [post]
 func (c *AuthController) handleRegister(w http.ResponseWriter, r *http.Request) {
 	op := "authController.handleRegister"
 
@@ -52,6 +66,20 @@ func (c *AuthController) handleRegister(w http.ResponseWriter, r *http.Request) 
 	w.WriteHeader(200)
 }
 
+// handleLogin godoc
+//
+//	@Summary		login
+//	@Description	login user
+//	@Tags			auth
+//
+//	@Param			body body	LoginRequestDTO	true	"Login body"
+//
+//	@Accept			json
+//	@Success		200
+//	@Failure		401
+//	@Failure		500
+//	@Header			200	{string}	Authorization	"Bearer token"
+//	@Router			/api/user/login [post]
 func (c *AuthController) handleLogin(w http.ResponseWriter, r *http.Request) {
 	op := "authController.handleLogin"
 

@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package balance.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/sodiqit/gophermart/gen/proto/balance/v1";
+
+// Access to the service methods requires authentication.
+// Clients must include a valid authentication token in the metadata using the key "token".
+// Example of adding a token to metadata: {"token": "your_access_token_here"}.
+service BalanceService {
+    rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+    rpc Withdraw(WithdrawRequest) returns (WithdrawResponse);
+    rpc GetWithdrawals(GetWithdrawalsRequest) returns (GetWithdrawalsResponse);
+  } 
+
+message Balance {
+    double current = 1;
+    double withdrawn = 2;
+}
+
+message Withdrawal {
+    string order_id = 1;
+    double amount = 2;
+    google.protobuf.Timestamp processed_at = 3;
+}
+
+message GetBalanceRequest {}
+
+message GetBalanceResponse {
+    Balance balance = 1;
+}
+
+message GetWithdrawalsRequest {}
+
+message GetWithdrawalsResponse {
+    repeated Withdrawal withdrawals = 1;
+}
+
+message WithdrawRequest {
+    double sum = 1;
+    string order_id = 2;
+}
+
+message WithdrawResponse {}
+

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package auth.v1;
+
+import "buf/validate/validate.proto";
+
+option go_package = "github.com/sodiqit/gophermart/gen/proto/auth/v1";
+
+message LoginRequest {
+  string nickname = 1;
+  string password = 2 [(buf.validate.field).string.min_len = 8, (buf.validate.field).string.max_len = 32];
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message RegisterRequest {
+  string nickname = 1;
+  string password = 2 [(buf.validate.field).string.min_len = 8, (buf.validate.field).string.max_len = 32];
+}
+
+message RegisterResponse {
+  string token = 1;
+}
+
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+} 

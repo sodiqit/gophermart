@@ -1,25 +1,32 @@
-# go-musthave-diploma-tpl
+# Gophermart
 
-Шаблон репозитория для индивидуального дипломного проекта курса «Go-разработчик»
+## Requirements for run 
 
-# Начало работы
+Installed [goose](https://github.com/pressly/goose) for run migrations
 
-1. Склонируйте репозиторий в любую подходящую директорию на вашем компьютере.
-2. В корне репозитория выполните команду `go mod init <name>` (где `<name>` — адрес вашего репозитория на GitHub без
-   префикса `https://`) для создания модуля
+## Requirements for development 
 
-# Обновление шаблона
+Installed: 
+* [goose](https://github.com/pressly/goose) for run migrations
+* [swag](https://github.com/swaggo/swag) for generate OpenAPI
+* [jet](https://github.com/go-jet/jet) for generate type safe queries
+* [buf](https://github.com/bufbuild/buf) for generate proto
 
-Чтобы иметь возможность получать обновления автотестов и других частей шаблона, выполните команду:
+## Run
 
+1. Setup pg db
+2. Up migrations
+```bash
+make migrations_up
 ```
-git remote add -m master template https://github.com/yandex-praktikum/go-musthave-diploma-tpl.git
+3. Start accrual server
+
+```bash
+chmod +x ./cmd/accrual/accrual_linux_amd64
+./cmd/accrual/accrual_linux_amd64
 ```
 
-Для обновления кода автотестов выполните команду:
-
+4. Start server
+```bash
+go run ./cmd/gophermart
 ```
-git fetch template && git checkout template/master .github
-```
-
-Затем добавьте полученные изменения в свой репозиторий.

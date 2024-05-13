@@ -30,6 +30,22 @@ func (c *OrderController) Route() *chi.Mux {
 	return r
 }
 
+// handleUploadOrder godoc
+//
+//	@Summary		upload new order
+//	@Tags			order
+//
+//	@Param			body	body	string	true	"OrderID"
+//	@Security		ApiKeyAuth
+//	@Accept			plain/text
+//	@Produce		json
+//	@Success		202
+//	@Success		200
+//	@Failure		401
+//	@Failure		409
+//	@Failure		422	string	true	"Not correct order number"
+//	@Failure		500
+//	@Router			/api/user/orders [post]
 func (c *OrderController) handleUploadOrder(w http.ResponseWriter, r *http.Request) {
 	op := "orderController.handleUploadOrder"
 
@@ -57,6 +73,18 @@ func (c *OrderController) handleUploadOrder(w http.ResponseWriter, r *http.Reque
 	mapUploadResultToHTTPAnswer(w, err, logger)
 }
 
+// handleGetUserList godoc
+//
+//	@Summary		get list of user orders
+//	@Tags			order
+//
+//	@Security		ApiKeyAuth
+//	@Produce		json
+//	@Success		204
+//	@Success		200 {array} dtos.Order
+//	@Failure		401
+//	@Failure		500
+//	@Router			/api/user/orders [get]
 func (c *OrderController) handleGetUserList(w http.ResponseWriter, r *http.Request) {
 	op := "orderController.handleGetUserList"
 
