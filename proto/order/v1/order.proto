@@ -34,6 +34,9 @@ message GetListResponse {
   repeated Order orders = 1;
 }
 
+// Access to the service methods requires authentication.
+// Clients must include a valid authentication token in the metadata using the key "token".
+// Example of adding a token to metadata: {"token": "your_access_token_here"}.
 service OrderService {
   rpc Upload(UploadRequest) returns (UploadResponse);
   rpc GetList(GetListRequest) returns (GetListResponse);

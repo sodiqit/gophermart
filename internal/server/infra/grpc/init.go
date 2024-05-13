@@ -9,6 +9,7 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	authv1 "github.com/sodiqit/gophermart/gen/proto/auth/v1"
+	balancev1 "github.com/sodiqit/gophermart/gen/proto/balance/v1"
 	orderv1 "github.com/sodiqit/gophermart/gen/proto/order/v1"
 	"github.com/sodiqit/gophermart/internal/logger"
 	"github.com/sodiqit/gophermart/internal/server/auth"
@@ -38,7 +39,7 @@ func RunServer(ctx context.Context, deps *infra.AppContainer) error {
 		}),
 	}
 
-	protectedMethods := []string{orderv1.OrderService_Upload_FullMethodName, orderv1.OrderService_GetList_FullMethodName}
+	protectedMethods := []string{orderv1.OrderService_Upload_FullMethodName, orderv1.OrderService_GetList_FullMethodName, balancev1.BalanceService_GetBalance_FullMethodName, balancev1.BalanceService_GetWithdrawals_FullMethodName, balancev1.BalanceService_Withdraw_FullMethodName}
 
 	srv = grpc.NewServer(grpc.ChainUnaryInterceptor(
 		recovery.UnaryServerInterceptor(recoveryOpts...),
@@ -48,6 +49,7 @@ func RunServer(ctx context.Context, deps *infra.AppContainer) error {
 
 	authv1.RegisterAuthServiceServer(srv, deps.AuthContainer.GRPCServer)
 	orderv1.RegisterOrderServiceServer(srv, deps.OrderContainer.GRPCServer)
+	balancev1.RegisterBalanceServiceServer(srv, deps.BalanceContainer.GRPCServer)
 
 	logger.Infow("start gRPC server", "port", config.GRPCAddress)
 
